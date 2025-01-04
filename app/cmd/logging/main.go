@@ -15,6 +15,8 @@ func main() {
 	ctx := context.Background()
 	l, err := logging.NewZapLogger(zap.InfoLevel)
 
+	l.InfoCtx(ctx, "logging started...", zap.String("app", "logging"), zap.String("service", "main"))
+
 	if err != nil {
 		log.Panic(err)
 	}
