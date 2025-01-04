@@ -77,17 +77,18 @@ func (z *ZapLogger) Sync() {
 }
 
 func (z *ZapLogger) withCtxFields(ctx context.Context, fields ...zap.Field) []zap.Field {
+	var mrgdFields ZapFields
 	ctxFields, ok := ctx.Value(zapFieldsKey).(ZapFields)
 	if ok {
-		ctxFields.Append(fields...)
+		mrgdFields = ctxFields.Append(fields...)
 	} else {
 		ctxFields = make(ZapFields)
-		ctxFields.Append(fields...)
+		mrgdFields = ctxFields.Append(fields...)
 	}
 
-	maskedFields := make([]zap.Field, 0, len(fields))
+	maskedFields := make([]zap.Field, 0, len(mrgdFields))
 
-	for _, f := range ctxFields {
+	for _, f := range mrgdFields {
 		maskedFields = append(maskedFields, z.maskField(f))
 	}
 
